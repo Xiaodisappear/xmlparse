@@ -192,10 +192,9 @@ public class XmlLayoutParse {
 
             }
 
-            variableDataSb.append(" // End Of Content View Elements").append(endLine).append(endLine);
+            variableDataSb.append(endLine).append(" // End Of Content View Elements").append(endLine).append(endLine);
             findDataSb.append(endLine).append("  }");
             results = variableDataSb.toString() + findDataSb.toString();
-            System.out.print(results + endLine);
         }
     }
 

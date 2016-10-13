@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -101,7 +102,7 @@
 
 <div class="container-fluid">
 
-    <form method="post" class="form-horizontal" action="/dealXml">
+    <form id="fomXml" method="post">
         <fieldset>
 
             <div class="row-fluid">
@@ -176,7 +177,8 @@
                                 <div class="input-append span5">
 
                                     <input id="prefix" name="prefix" type="text" value="m">
-                                    <button class="btn btn-success" type="submit">Generate</button>
+                                    <input type="button" class="btn btn-success" onclick="dealXMLDataWithJava()"
+                                           value="Generate">Generate</input>
                                 </div>
                             </div>
                             <!-- controls-row -->
@@ -188,24 +190,12 @@
                     <div id="aaSettings" class="hidden">
                         <div class="control-group">
                             <label class="control-label"></label>
-                            <button class="btn btn-success" type="submit">Generate</button>
+                            <button class="btn btn-success" onclick="dealXMLDataWithAA()">Generate
+                            </button>
                         </div>
                         <!-- controls-row -->
                     </div>
-                    <!-- aa settings -->
 
-                    <div class="control-group">
-                        <label class="control-label">Settings</label>
-
-                        <label class="checkbox inline">
-                            <input type="checkbox" name="verbose" value="verbose">
-                            verbose
-                        </label>
-                        <label class="checkbox inline">
-                            <input type="checkbox" name="suppress" value="suppress" checked>
-                            no&nbsp;default&nbsp;named&nbsp;items
-                        </label>
-                    </div>
                     <!-- control-group -->
 
                 </div>
@@ -216,15 +206,14 @@
             <div class="row-fluid">
                 <div class="span6">
                     <legend>Layout XML</legend>
-                    <textarea class="input-xxlarge" name="xml" rows="16" cols="80"
+                    <textarea class="input-xxlarge" name="xml" rows="16" cols="80" id="xml"
                               placeholder="paste layout XML here"></textarea>
                 </div>
                 <!-- span 6 -->
                 <div class="span6">
-
                     <legend>Results</legend>
-                    <textarea class="input-xxlarge" name="results" rows="15" cols="120" wrap="off"
-                              placeholder="results appear here"></textarea>
+                        <textarea class="input-xxlarge" name="results" rows="15" cols="120" wrap="off" id="results"
+                                  placeholder="results appear here"></textarea>
                 </div>
                 <!-- span 6 -->
             </div>
@@ -275,6 +264,56 @@
         s.parentNode.insertBefore(ga, s);
     })();
 
+
+
+    //将form中的值转换为键值对。
+    function getFormJson(frm) {
+        var o = {};
+        var a = $(frm).serializeArray();
+        $.each(a, function () {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+
+        return o;
+    }
+
+    function dealXMLDataWithJava() {
+
+        var xml = document.getElementById("xml").value;
+
+        if (xml != null && xml.length > 0) {
+            var form = document.getElementById("fomXml");
+            var data = getFormJson(form);
+            $.ajax({
+                type: "POST",
+                url: "/dealXml",
+                data: data,
+                success: function (msg) {
+                    document.getElementById("results").innerText = msg;
+                }, error: function () {
+                    alert("error");
+                }
+            });
+        }
+
+    }
+
+
+    function dealXMLDataWithAA() {
+
+
+    }
+
+
 </script>
+
+
 </body>
 </html>

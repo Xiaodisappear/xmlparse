@@ -3464,10 +3464,7 @@ input[type="button"].btn-block {
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 }
 
-.btn-success:hover,
-.btn-success:focus,
-.btn-success:active,
-.btn-success.active,
+
 .btn-success.disabled,
 .btn-success[disabled] {
     color: #ffffff;
