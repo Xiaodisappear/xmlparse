@@ -10,7 +10,7 @@ public class TextUtils {
 
     public static final boolean isEmpty(String string) {
 
-        if (string == null && string.equals("")) {
+        if (string == null || string.equals("")) {
             return true;
         }
         return false;

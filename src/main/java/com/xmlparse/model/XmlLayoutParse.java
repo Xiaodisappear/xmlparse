@@ -7,6 +7,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -19,17 +20,18 @@ public class XmlLayoutParse {
 
     private static final String xmlIdName = "id";
     private static final String xmlIdAdd = "+id";
+    private static final String variableReplace = "_";
 
     /**
      * 使用java或注解
-     * <p/>
+     * <p>
      * java or aa
      */
     private String javaOrAA;
 
     /**
      * 修饰符
-     * <p/>
+     * <p>
      * 使用 public 或者 private
      */
     private String publicPrivate;
@@ -166,11 +168,87 @@ public class XmlLayoutParse {
     public void assembleData() {
         if (!xmlMaps.isEmpty()) {
 
+            String endLine = System.getProperty("line.separator", "\n");
+
+            boolean isJava = isJavaOrAa();
+            String templateVariable = getVariableTemplate();
+            String templateFind = getFindTemolate();
+
+            StringBuffer variableDataSb = new StringBuffer();
+            StringBuffer findDataSb = new StringBuffer();
+
+            variableDataSb.append(" // Content View Elements").append(endLine).append(endLine);
+            findDataSb.append(" private void bindViews() {").append(endLine).append(endLine);
 
             for (Map.Entry<String, String> entry : xmlMaps.entrySet()) {
-                System.out.print("name:" + entry.getKey() + "####value:" + entry.getValue());
+
+                String key = entry.getKey().replace("@+id/", "");
+                String variableKey = getVariableByKey(key);
+                String value = entry.getValue();
+                if (isJava) {
+                    variableDataSb.append(String.format(templateVariable, variableKey)).append(endLine);
+                    findDataSb.append(String.format(templateFind, variableKey, value, key)).append(endLine);
+                }
+
+            }
+
+            variableDataSb.append(" // End Of Content View Elements").append(endLine).append(endLine);
+            findDataSb.append(endLine).append("  }");
+            results = variableDataSb.toString() + findDataSb.toString();
+            System.out.print(results + endLine);
+        }
+    }
+
+    /**
+     * 获取变量
+     *
+     * @param key
+     * @return
+     */
+    private String getVariableByKey(String key) {
+
+        if (TextUtils.isEmpty(key)) {
+            return null;
+        }
+
+        if(!TextUtils.isEmpty(prefix)){
+            if(key.length() > 0) {
+                String upperCase = String.valueOf(key.charAt(0)).toUpperCase();
+                key = new StringBuffer(key).replace(0, 1, upperCase).toString();
+                key = new StringBuffer(prefix).append(key).toString();
             }
         }
+
+        while (key.contains(variableReplace)) {
+            int index = key.indexOf(variableReplace);
+            if (index + 1 < key.length()) {
+                String upperCase = String.valueOf(key.charAt(index + 1)).toUpperCase();
+                key = new StringBuffer(key).replace(index + 1, index + 2, upperCase).toString();
+            }
+
+            key = key.replaceFirst(variableReplace, "").trim();
+        }
+
+        return key;
+    }
+
+    /**
+     * 判断是java还是注解
+     *
+     * @return
+     */
+    private boolean isJavaOrAa() {
+
+        if (!TextUtils.isEmpty(javaOrAA) && javaOrAA.equals("aa")) {
+            return false;
+        }
+
+        return true;
+
+    }
+
+    private String getFindTemolate() {
+        return "    %s = (%s) findViewById(R.id.%s);";
     }
 
     /**
@@ -178,20 +256,24 @@ public class XmlLayoutParse {
      *
      * @return
      */
-    public String getVariableTemplate() {
-
-        boolean isJavaOrAA = true;
-
-        if (javaOrAA.equals("aa")) {
-            isJavaOrAA = false;
-        }
-
+    private String getVariableTemplate() {
 
         StringBuffer sb = new StringBuffer();
-        sb.append(publicPrivate).append(" ").append("%s");
+        sb.append(" ");
+        sb.append(publicPrivate).append(" ");
 
+        if (!TextUtils.isEmpty(staticModify)) {
+            sb.append(staticModify).append(" ");
+        }
 
-        return null;
+        if (!TextUtils.isEmpty(finalModify)) {
+            sb.append(finalModify).append(" ");
+        }
+
+        sb.append("String").append(" ");
+        sb.append("%s").append(";");
+
+        return sb.toString();
 
     }
 
@@ -225,6 +307,8 @@ public class XmlLayoutParse {
                 ", verbose='" + verbose + '\'' +
                 ", suppress='" + suppress + '\'' +
                 ", xml='" + xml + '\'' +
+                ", results='" + results + '\'' +
+                ", xmlMaps=" + xmlMaps +
                 '}';
     }
 }
