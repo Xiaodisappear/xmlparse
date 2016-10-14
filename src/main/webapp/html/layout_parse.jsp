@@ -190,8 +190,8 @@
                     <div id="aaSettings" class="hidden">
                         <div class="control-group">
                             <label class="control-label"></label>
-                            <button class="btn btn-success" onclick="dealXMLDataWithAA()">Generate
-                            </button>
+                            <input type="button" class="btn btn-success" onclick="dealXMLDataWithJava()"
+                                   value="Generate">Generate</input>
                         </div>
                         <!-- controls-row -->
                     </div>
@@ -263,7 +263,6 @@
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(ga, s);
     })();
-
 
 
     //将form中的值转换为键值对。

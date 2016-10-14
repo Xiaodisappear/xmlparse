@@ -7,7 +7,6 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -171,30 +170,53 @@ public class XmlLayoutParse {
             String endLine = System.getProperty("line.separator", "\n");
 
             boolean isJava = isJavaOrAa();
-            String templateVariable = getVariableTemplate();
-            String templateFind = getFindTemolate();
-
             StringBuffer variableDataSb = new StringBuffer();
-            StringBuffer findDataSb = new StringBuffer();
+            String templateVariable;
+            String templateFind;
+            if (isJava) {
+                templateVariable = getVariableTemplateForJava();
+                templateFind = getFindTemplate();
 
-            variableDataSb.append(" // Content View Elements").append(endLine).append(endLine);
-            findDataSb.append(" private void bindViews() {").append(endLine).append(endLine);
+                StringBuffer findDataSb = new StringBuffer();
 
-            for (Map.Entry<String, String> entry : xmlMaps.entrySet()) {
+                variableDataSb.append(" // Content View Elements").append(endLine).append(endLine);
+                findDataSb.append(" private void bindViews() {").append(endLine).append(endLine);
 
-                String key = entry.getKey().replace("@+id/", "");
-                String variableKey = getVariableByKey(key);
-                String value = entry.getValue();
-                if (isJava) {
+                for (Map.Entry<String, String> entry : xmlMaps.entrySet()) {
+
+                    String key = entry.getKey().replace("@+id/", "");
+                    String variableKey = getVariableByKey(key);
+                    String value = entry.getValue();
                     variableDataSb.append(String.format(templateVariable, variableKey)).append(endLine);
                     findDataSb.append(String.format(templateFind, variableKey, value, key)).append(endLine);
+
+                }
+                variableDataSb.append(endLine).append(" // End Of Content View Elements").append(endLine).append(endLine);
+                findDataSb.append(endLine).append("  }");
+                results = variableDataSb.toString() + findDataSb.toString();
+            } else {
+                templateVariable = getVariableTemplateForAA();
+                templateFind = getAAFindTemplate();
+
+                String aniTemplate = new StringBuffer().append(templateFind).append(endLine).append(templateVariable).toString();
+
+                variableDataSb.append(" // Content View Elements").append(endLine).append(endLine);
+
+                for (Map.Entry<String, String> entry : xmlMaps.entrySet()) {
+
+                    String key = entry.getKey().replace("@+id/", "");
+                    String variableKey = getVariableByKey(key);
+                    String value = entry.getValue();
+                    variableDataSb.append(String.format(aniTemplate, key, value, variableKey)).append(endLine).append(endLine);
+
                 }
 
-            }
+                variableDataSb.append(endLine).append(" // End Of Content View Elements").append(endLine).append(endLine);
 
-            variableDataSb.append(endLine).append(" // End Of Content View Elements").append(endLine).append(endLine);
-            findDataSb.append(endLine).append("  }");
-            results = variableDataSb.toString() + findDataSb.toString();
+                results = variableDataSb.toString();
+
+
+            }
         }
     }
 
@@ -210,8 +232,8 @@ public class XmlLayoutParse {
             return null;
         }
 
-        if(!TextUtils.isEmpty(prefix)){
-            if(key.length() > 0) {
+        if (!TextUtils.isEmpty(prefix)) {
+            if (key.length() > 0) {
                 String upperCase = String.valueOf(key.charAt(0)).toUpperCase();
                 key = new StringBuffer(key).replace(0, 1, upperCase).toString();
                 key = new StringBuffer(prefix).append(key).toString();
@@ -246,8 +268,14 @@ public class XmlLayoutParse {
 
     }
 
-    private String getFindTemolate() {
+    private String getFindTemplate() {
         return "    %s = (%s) findViewById(R.id.%s);";
+    }
+
+    private String getAAFindTemplate() {
+
+
+        return " @Bind(R.id.%s)";
     }
 
     /**
@@ -255,7 +283,7 @@ public class XmlLayoutParse {
      *
      * @return
      */
-    private String getVariableTemplate() {
+    private String getVariableTemplateForJava() {
 
         StringBuffer sb = new StringBuffer();
         sb.append(" ");
@@ -274,6 +302,16 @@ public class XmlLayoutParse {
 
         return sb.toString();
 
+    }
+
+
+    /**
+     * 组织数据变量模版  AA
+     *
+     * @return
+     */
+    private String getVariableTemplateForAA() {
+        return " %s %s;";
     }
 
     /**
