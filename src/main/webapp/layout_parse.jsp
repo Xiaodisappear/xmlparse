@@ -6,19 +6,19 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Android Layout Parser</title>
+    <link rel="shortcut icon" href="image/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="xinggen.guo">
 
     <!-- Le styles -->
-    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -54,11 +54,11 @@
             font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
         }
     </style>
-    <link href="/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <script src="/js/html5shiv.js"></script>
+    <script src="js/html5shiv.js"></script>
     <![endif]-->
 </head>
 
@@ -178,7 +178,8 @@
 
                                     <input id="prefix" name="prefix" type="text" value="m">
                                     <input type="button" class="btn btn-success" onclick="dealXMLDataWithJava()"
-                                           value="Generate">Generate</input>
+                                           value="Generate"
+                                    />
                                 </div>
                             </div>
                             <!-- controls-row -->
@@ -191,7 +192,8 @@
                         <div class="control-group">
                             <label class="control-label"></label>
                             <input type="button" class="btn btn-success" onclick="dealXMLDataWithJava()"
-                                   value="Generate">Generate</input>
+                                   value="Generate"
+                            />
                         </div>
                         <!-- controls-row -->
                     </div>
@@ -235,19 +237,18 @@
 <!-- Le javascript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="/js/jquery.js"></script>
-<script src="/js/bootstrap-transition.js"></script>
-<script src="/js/bootstrap-alert.js"></script>
-<script src="/js/bootstrap-modal.js"></script>
-<script src="/js/bootstrap-dropdown.js"></script>
-<script src="/js/bootstrap-scrollspy.js"></script>
-<script src="/js/bootstrap-tab.js"></script>
-<script src="/js/bootstrap-tooltip.js"></script>
-<script src="/js/bootstrap-popover.js"></script>
-<script src="/js/bootstrap-button.js"></script>
-<script src="/js/bootstrap-collapse.js"></script>
-<script src="/js/bootstrap-carousel.js"></script>
-<script src="/js/bootstrap-typeahead.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap-transition.js"></script>
+<script src="js/bootstrap-modal.js"></script>
+<script src="js/bootstrap-dropdown.js"></script>
+<script src="js/bootstrap-scrollspy.js"></script>
+<script src="js/bootstrap-tab.js"></script>
+<script src="js/bootstrap-tooltip.js"></script>
+<script src="js/bootstrap-popover.js"></script>
+<script src="js/bootstrap-button.js"></script>
+<script src="js/bootstrap-collapse.js"></script>
+<script src="js/bootstrap-carousel.js"></script>
+<script src="js/bootstrap-typeahead.js"></script>
 
 <script type="text/javascript">
 
@@ -259,7 +260,7 @@
         var ga = document.createElement('script');
         ga.type = 'text/javascript';
         ga.async = true;
-        ga.src = '/js/ga.js';
+        ga.src = 'js/ga.js';
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(ga, s);
     })();
@@ -292,21 +293,14 @@
             var data = getFormJson(form);
             $.ajax({
                 type: "POST",
-                url: "/dealXml",
+                url: "${pageContext.request.contextPath}/dealXml",
                 data: data,
                 success: function (msg) {
                     document.getElementById("results").innerText = msg;
                 }, error: function () {
-                    alert("error");
                 }
             });
         }
-
-    }
-
-
-    function dealXMLDataWithAA() {
-
 
     }
 
