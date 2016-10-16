@@ -227,7 +227,7 @@ public class XmlLayoutParse {
     }
 
     /**
-     * 获取变量
+     * Get variable.
      *
      * @param key
      * @return
@@ -260,8 +260,8 @@ public class XmlLayoutParse {
     }
 
     /**
-     * 判断是java还是注解
      *
+     *is java or aa
      * @return
      */
     private boolean isJavaOrAa() {
@@ -285,7 +285,7 @@ public class XmlLayoutParse {
     }
 
     /**
-     * 组织数据变量模版
+     * Organize Java data variable template
      *
      * @return
      */
@@ -312,7 +312,7 @@ public class XmlLayoutParse {
 
 
     /**
-     * 组织数据变量模版  AA
+     * Organize AA data variable template
      *
      * @return
      */
