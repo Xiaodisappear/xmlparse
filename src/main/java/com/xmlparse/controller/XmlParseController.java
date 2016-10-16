@@ -22,6 +22,7 @@ public class XmlParseController {
         return "/layout_parse";
     }
 
+
     @RequestMapping(value = "/dealXml", method = RequestMethod.POST)
     @ResponseBody
     public String parseXml(@ModelAttribute("XmlLayoutParse") XmlLayoutParse xmlParseEntity) {

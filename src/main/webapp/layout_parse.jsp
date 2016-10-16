@@ -286,18 +286,24 @@
 
     function dealXMLDataWithJava() {
 
+        //获取需要解析的xml内容.
         var xml = document.getElementById("xml").value;
 
         if (xml != null && xml.length > 0) {
+            //获取表单数据.
             var form = document.getElementById("fomXml");
+            //将表单数据转换成简直对的形式.
             var data = getFormJson(form);
+            //用ajax 方式提交数据.
             $.ajax({
                 type: "POST",
                 url: "${pageContext.request.contextPath}/dealXml",
                 data: data,
                 success: function (msg) {
+                    //成功之后将数据写入results节点中
                     document.getElementById("results").innerText = msg;
                 }, error: function () {
+                    alert("数据格式有误");
                 }
             });
         }

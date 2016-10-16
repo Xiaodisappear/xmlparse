@@ -142,6 +142,9 @@ public class XmlLayoutParse {
         this.xml = xml;
     }
 
+    /**
+     * Work with XML data.
+     */
     public void dealXmlLayout() {
 
         try {
@@ -150,7 +153,7 @@ public class XmlLayoutParse {
                 if (xmlMaps == null) {
                     xmlMaps = new HashMap<>();
                 }
-
+                //用dom4j解析
                 SAXReader reader = new SAXReader();
                 Document doc = reader.read(new ByteArrayInputStream(xml.getBytes("UTF-8")));
 
@@ -164,6 +167,9 @@ public class XmlLayoutParse {
 
     }
 
+    /**
+     * The data is organized into a Java form, or the form of annotation.
+     */
     public void assembleData() {
         if (!xmlMaps.isEmpty()) {
 
